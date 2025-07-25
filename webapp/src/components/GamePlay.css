@@ -1,0 +1,350 @@
+/* Modal overlay styles */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background: white;
+  border-radius: 12px;
+  padding: 0;
+  max-width: 400px;
+  width: 90%;
+  max-height: 80vh;
+  overflow-y: auto;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  position: relative;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  border-bottom: 1px solid #eee;
+}
+
+.modal-header h3 {
+  margin: 0;
+  color: #333;
+}
+
+.modal-close {
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: #666;
+  padding: 0;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: background-color 0.2s;
+}
+
+.modal-close:hover {
+  background-color: #f0f0f0;
+}
+
+.modal-body {
+  padding: 5px 20px;
+  text-align: center;
+}
+
+.share-code {
+  margin-bottom: 20px;
+}
+
+.share-label {
+  font-size: 16px;
+  color: #666;
+  display: block;
+  margin-bottom: 2px;
+}
+
+.game-code-large {
+  font-size: 36px;
+  font-weight: bold;
+  color: #2c3e50;
+  padding: 15px;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  letter-spacing: 4px;
+}
+
+.share-qr {
+  border-top: 1px solid #eee;
+  /*padding-top: 20px;*/
+  padding:5px 20px;
+}
+
+.qr-code-large {
+  max-width: 200px;
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+}
+
+/* Word reveal styles - specific to GamePlay */
+.game-play .word-reveal-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+  margin: 0 !important;
+}
+
+.game-play .word-display {
+  margin: 2rem 0 !important;
+}
+
+.game-play .word, 
+.game-play .word-hidden {
+  font-size: 28px !important;
+  font-weight: bold !important;
+  padding: 20px !important;
+  margin: 0 !important;
+  border-radius: 12px !important;
+  min-height: 80px !important;
+  width: 100% !important;
+  max-width: 300px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  text-align: center !important;
+  box-sizing: border-box !important;
+  /* Fixed dimensions to prevent layout shift */
+  min-width: 250px !important;
+}
+
+.game-play .word {
+  color: #2c3e50 !important;
+  background-color: #e8f4fd !important;
+  border: 2px solid #3498db !important;
+}
+
+.game-play .word-hidden {
+  color: #95a5a6 !important;
+  background-color: #f8f9fa !important;
+  border: 2px dashed #bdc3c7 !important;
+}
+
+.game-play .btn-reveal {
+  background-color: #3498db !important;
+  color: white !important;
+  border: none !important;
+  padding: 15px 25px !important;
+  margin: 0 !important;
+  font-size: 16px !important;
+  border-radius: 8px !important;
+  cursor: pointer !important;
+  transition: background-color 0.2s !important;
+  user-select: none !important;
+  -webkit-user-select: none !important;
+  -moz-user-select: none !important;
+  -ms-user-select: none !important;
+}
+
+.game-play .btn-reveal:hover {
+  background-color: #2980b9 !important;
+}
+
+.game-play .btn-reveal:active {
+  background-color: #21618c !important;
+  transform: scale(0.98) !important;
+}
+
+/* Game header styles */
+.game-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding: 0 10px;
+}
+
+.btn-small {
+  padding: 8px 16px;
+  font-size: 14px;
+}
+
+/* Players badges styles */
+.players-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+  margin-top: 10px;
+}
+
+.player-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 500;
+  white-space: nowrap;
+  border: 1px solid transparent;
+  transition: all 0.2s ease;
+}
+
+.player-badge-you {
+  background-color: #e3f2fd !important;
+  color: #1976d2 !important;
+  border-color: #2196f3 !important;
+  box-shadow: 0 2px 4px rgba(33, 150, 243, 0.2);
+}
+
+.player-badge-other {
+  background-color: #f5f5f5 !important;
+  color: #333 !important;
+  border-color: #ddd !important;
+}
+
+.player-badge:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
+}
+
+.players-in-game {
+  margin: 20px 0;
+  padding: 15px;
+  background-color: #fafafa;
+  border-radius: 12px;
+  border: 1px solid #e0e0e0;
+}
+
+.player-controls {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.players-in-game h3 {
+  margin: 0 0 10px 0;
+  color: #333;
+  font-size: 18px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 600px) {
+  .modal-content {
+    width: 95%;
+    margin: 10px;
+  }
+  
+  .game-code-large {
+    font-size: 28px;
+    letter-spacing: 2px;
+  }
+  
+  .game-play .word, 
+  .game-play .word-hidden {
+    font-size: 24px !important;
+    padding: 15px !important;
+    min-width: 200px !important;
+    max-width: 280px !important;
+  }
+
+  .players-badges {
+    gap: 6px;
+  }
+
+  .player-badge {
+    font-size: 13px;
+    padding: 5px 10px;
+  }
+
+  .players-in-game {
+    padding: 12px;
+  }
+}
+
+/* QR Scanner Styles */
+.qr-scanner-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.qr-scanner-container {
+  background: #1a1a1a;
+  padding: 20px;
+  border-radius: 10px;
+  max-width: 90%;
+  width: 450px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.qr-scanner-header {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.qr-scanner-header h3 {
+  margin: 0;
+  color: #fff;
+}
+
+.close-scanner {
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 24px;
+  cursor: pointer;
+  padding: 0;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.qr-scanner-video {
+  border-radius: 8px;
+  background: #000;
+}
+
+.qr-scanner-error {
+  text-align: center;
+  padding: 20px;
+}
+
+.qr-scanner-error p {
+  margin: 10px 0;
+  color: #f8f9fa;
+  font-size: 16px;
+}
+
+.qr-scanner-hint {
+  font-size: 14px;
+  color: #ffd93d;
+  margin-top: 15px;
+  padding: 10px;
+  background-color: rgba(255, 217, 61, 0.1);
+  border-radius: 8px;
+  border: 1px solid rgba(255, 217, 61, 0.3);
+}

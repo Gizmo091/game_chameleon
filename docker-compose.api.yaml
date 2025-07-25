@@ -1,0 +1,16 @@
+version: '3.8'
+services:
+  api:
+    image: node:18-alpine
+    container_name: chameleon_api
+    ports:
+      - "3000:3000"
+    environment:
+      - PORT=3000
+    command: >
+      /bin/sh -c "
+        git clone https://github.com/Gizmo091/game_chameleon /usr/src/app &&
+        cd /usr/src/app/api &&
+        npm install &&
+        npm start
+      "
