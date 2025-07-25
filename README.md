@@ -1,6 +1,19 @@
 # Chameleon Game
 
+![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)
+![Maintainer](https://img.shields.io/badge/maintainer-Mathieu%20Vedie-blue)
+![License](https://img.shields.io/badge/license-MIT-blue.svg)
+![Contributions](https://img.shields.io/badge/contributions-welcome-brightgreen.svg)
+
+[![GitHub latest commit](https://badgen.net/github/last-commit/Gizmo091/game_chameleon)](https://github.com/Gizmo091/game_chameleon/commit/)
+
+[!["Buy Me A Coffee"](https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png)](https://www.buymeacoffee.com/mathieuvedie)
+
 Un jeu multilingue inspiré du "Chameleon" où tous les joueurs reçoivent le même mot principal, sauf un seul — le Caméléon — qui reçoit un mot secondaire différent mais du même genre.
+
+## Proposition
+
+- Ne pas hesiter à proposer vos couples de mots (ouvrez une ISSUE ou faite une pull request)
 
 ## Règles du jeu
 
@@ -224,14 +237,3 @@ game_chameleon/
 - **Frontend** : React, Vite, React Router, Socket.IO Client
 - **UI** : CSS personnalisé
 - **QR Code** : qrcode library
-
-## Notes de production
-
-Pour un déploiement en production :
-
-1. Configurer CORS pour limiter les origines autorisées
-2. Utiliser HTTPS
-3. Implémenter une base de données persistante
-4. Ajouter de l'authentification
-5. Configurer les variables d'environnement appropriées
-6. Mettre en place du monitoring et des logs
