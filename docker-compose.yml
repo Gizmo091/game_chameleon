@@ -7,7 +7,7 @@ services:
     working_dir: /app
     ports:
       - "3610:3610"
-    command: sh -c "apk add --no-cache git && git clone https://github.com/YOUR_USERNAME/game_chameleon.git . && cd api && npm install && npm start"
+    command: sh -c "apk add --no-cache git && git clone https://github.com/Gizmo091/game_chameleon.git . && cd api && npm install && npm start"
     environment:
       - NODE_ENV=production
       - PORT=3610
@@ -19,9 +19,9 @@ services:
     working_dir: /app
     ports:
       - "3680:3680"
-    command: sh -c "apk add --no-cache git && git clone https://github.com/YOUR_USERNAME/game_chameleon.git . && cd webapp && npm install && npm run build && npm run preview -- --host 0.0.0.0 --port 3680"
+    command: sh -c "apk add --no-cache git && git clone https://github.com/Gizmo091/game_chameleon.git . && cd webapp && npm install && npm run build && npm run preview -- --host 0.0.0.0 --port 3680"
     environment:
-      - VITE_API_URL=http://api.cameleon.vedielaute.fr
+      - VITE_API_URL=https://api.cameleon.vedielaute.fr
     restart: unless-stopped
     depends_on:
       - api

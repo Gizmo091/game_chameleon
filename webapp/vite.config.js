@@ -7,5 +7,14 @@ export default defineConfig({
   server: {
     host: '0.0.0.0',
     port: 8080
+  },
+  preview: {
+    host: '0.0.0.0',
+    port: 3680,
+    allowedHosts: [
+      'cameleon.vedielaute.fr',
+      'localhost',
+      '127.0.0.1'
+    ]
   }
 })
