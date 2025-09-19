@@ -7,21 +7,49 @@ services:
     working_dir: /app
     ports:
       - "3610:3610"
-    command: sh -c "apk add --no-cache git && git clone https://github.com/Gizmo091/game_chameleon.git . && cd api && npm install && npm start"
     environment:
       - NODE_ENV=production
       - PORT=3610
+      - npm_config_loglevel=verbose
+    command: >
+      sh -c "
+      apk add --no-cache git &&
+      rm -rf /app/src && mkdir -p /app/src &&
+      git clone --depth=1 https://github.com/Gizmo091/game_chameleon.git /app/src &&
+      cd /app/src/api &&
+      node -v && npm -v &&
+      ( [ -f package-lock.json ] && echo 'Install (ci)' && npm ci --no-audit --no-fund --loglevel=verbose || (echo 'Install (install)' && npm install --loglevel=verbose) ) &&
+      echo 'Start API' &&
+      npm start
+      "
     restart: unless-stopped
 
   webapp:
-    image: node:18-alpine
+    image: node:20-alpine
     container_name: chameleon-webapp
     working_dir: /app
     ports:
       - "3680:3680"
-    command: sh -c "apk add --no-cache git && git clone https://github.com/Gizmo091/game_chameleon.git . && cd webapp && npm install && npm run build && npm run preview -- --host 0.0.0.0 --port 3680"
     environment:
       - VITE_API_URL=https://api.cameleon.vedielaute.fr
+      - npm_config_loglevel=verbose
+    command: >
+      sh -c "
+      apk add --no-cache git &&
+      rm -rf /app/src && mkdir -p /app/src &&
+      git clone --depth=1 https://github.com/Gizmo091/game_chameleon.git /app/src &&
+      cd /app/src/webapp &&
+      node -v && npm -v &&
+      echo 'Install' &&
+      ( [ -f package-lock.json ] && npm ci --no-audit --no-fund --loglevel=verbose || npm install --loglevel=verbose ) ||
+        (echo 'First install failed — trying registry fallback' &&
+         npm config set registry https://registry.npmjs.org &&
+         ( [ -f package-lock.json ] && npm ci --no-audit --no-fund --loglevel=verbose || npm install --loglevel=verbose )) &&
+      echo 'Build' &&
+      npm run build --loglevel verbose &&
+      echo 'Run Preview' &&
+      npm run preview -- --host 0.0.0.0 --port 3680
+      "
     restart: unless-stopped
     depends_on:
       - api
