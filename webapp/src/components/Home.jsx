@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
 import { useGame } from '../contexts/GameContext';
-import { t } from '../utils/i18n';
+import { t, translations } from '../utils/i18n';
 
 function Home({ lang, setLang }) {
   const navigate = useNavigate();
@@ -44,6 +44,18 @@ function Home({ lang, setLang }) {
         <button onClick={() => navigate('/join')} className="btn-secondary">
           {t(lang, 'home.joinGame')}
         </button>
+      </div>
+
+      <div className="game-rules">
+        <h2>{t(lang, 'home.rulesTitle')}</h2>
+        <div className="rules-list">
+          {(translations[lang] || translations['en']).home.rules.map((rule, i) => (
+            <div key={i} className="rule-step">
+              <span className="rule-number">{i + 1}</span>
+              <p className="rule-text">{rule}</p>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );

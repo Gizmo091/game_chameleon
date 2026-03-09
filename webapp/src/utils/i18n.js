@@ -4,7 +4,15 @@ export const translations = {
       title: 'Chameleon Game',
       createGame: 'Create Game',
       joinGame: 'Join Game',
-      language: 'Language'
+      language: 'Language',
+      rulesTitle: 'How to play',
+      rules: [
+        'A minimum of 3 players is required.',
+        'All players receive the same word (e.g. "Christmas"), except one — the Chameleon — who receives a different but similar word (e.g. "Easter").',
+        'The game is played in 3 rounds. Each round, every player gives a one-word clue related to their word.',
+        'After the 3 rounds, players must agree on who they think the Chameleon is.',
+        'The Chameleon must blend in without getting caught!'
+      ]
     },
     create: {
       title: 'Create a New Game',
@@ -71,7 +79,15 @@ export const translations = {
       title: 'Jeu du Caméléon',
       createGame: 'Créer une partie',
       joinGame: 'Rejoindre une partie',
-      language: 'Langue'
+      language: 'Langue',
+      rulesTitle: 'Comment jouer',
+      rules: [
+        'Un minimum de 3 joueurs est requis.',
+        'Tous les joueurs reçoivent le même mot (ex : "Noël"), sauf un — le Caméléon — qui reçoit un mot différent mais similaire (ex : "Pâques").',
+        'La partie se joue en 3 tours. A chaque tour, chaque joueur donne un indice en un seul mot lié à son mot.',
+        'Après les 3 tours, les joueurs doivent se mettre d\'accord pour désigner celui qu\'ils pensent être le Caméléon.',
+        'Le Caméléon doit se fondre dans le groupe sans se faire repérer !'
+      ]
     },
     create: {
       title: 'Créer une nouvelle partie',

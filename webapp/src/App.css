@@ -182,6 +182,64 @@ button:disabled {
   align-items: center;
 }
 
+.game-rules {
+  margin-top: 3rem;
+  max-width: 500px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.game-rules h2 {
+  text-align: center;
+  font-size: 1.3rem;
+  margin-bottom: 1.5rem;
+  opacity: 0.8;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+.rules-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.rule-step {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 14px 16px;
+  background-color: #f8f9fa;
+  border-radius: 12px;
+  border-left: 3px solid #646cff;
+  transition: transform 0.15s ease;
+}
+
+.rule-step:hover {
+  transform: translateX(4px);
+}
+
+.rule-number {
+  flex-shrink: 0;
+  width: 28px;
+  height: 28px;
+  background-color: #646cff;
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.85rem;
+  font-weight: 700;
+  margin-top: 1px;
+}
+
+.rule-text {
+  margin: 0;
+  line-height: 1.55;
+  font-size: 0.95rem;
+}
+
 @media (prefers-color-scheme: dark) {
   input {
     background-color: #2a2a2e;
@@ -206,5 +264,10 @@ button:disabled {
 
   .words-reveal {
     background-color: #2a2a2e;
+  }
+
+  .rule-step {
+    background-color: #2a2a2e;
+    border-left-color: #646cff;
   }
 }
