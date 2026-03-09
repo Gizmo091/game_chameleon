@@ -348,3 +348,71 @@
   border-radius: 8px;
   border: 1px solid rgba(255, 217, 61, 0.3);
 }
+
+@media (prefers-color-scheme: dark) {
+  .modal-content {
+    background: #1e1e1e;
+  }
+
+  .modal-header {
+    border-bottom-color: #333;
+  }
+
+  .modal-header h3 {
+    color: rgba(255, 255, 255, 0.87);
+  }
+
+  .modal-close {
+    color: #aaa;
+  }
+
+  .modal-close:hover {
+    background-color: #333;
+  }
+
+  .share-label {
+    color: #aaa;
+  }
+
+  .game-code-large {
+    color: #e0e0e0;
+    background-color: #2a2a2e;
+  }
+
+  .share-qr {
+    border-top-color: #333;
+  }
+
+  .game-play .word {
+    color: #e0e0e0 !important;
+    background-color: #1a3a4a !important;
+    border-color: #3498db !important;
+  }
+
+  .game-play .word-hidden {
+    color: #888 !important;
+    background-color: #2a2a2e !important;
+    border-color: #555 !important;
+  }
+
+  .player-badge-you {
+    background-color: #1a3a5c !important;
+    color: #64b5f6 !important;
+    border-color: #2196f3 !important;
+  }
+
+  .player-badge-other {
+    background-color: #2a2a2e !important;
+    color: #e0e0e0 !important;
+    border-color: #444 !important;
+  }
+
+  .players-in-game {
+    background-color: #1e1e1e;
+    border-color: #333;
+  }
+
+  .players-in-game h3 {
+    color: rgba(255, 255, 255, 0.87);
+  }
+}

@@ -10,7 +10,7 @@ import './GamePlay.css';
 function GamePlay({ lang }) {
   const { gameCode, playerId: urlPlayerId, pseudo: urlPseudo } = useParams();
   const navigate = useNavigate();
-  const { socket } = useSocket();
+  const { socket, connected } = useSocket();
   const { gameState, updateGameState, resetGame } = useGame();
   const [loading, setLoading] = useState(false);
   const [gameEnded, setGameEnded] = useState(false);
@@ -34,10 +34,9 @@ function GamePlay({ lang }) {
   };
 
   useEffect(() => {
-    if (!socket) return;
+    if (!socket || !connected) return;
 
     let mounted = true;
-    let hasJoined = false;
 
     // First, handle player info restoration from URL
     if (urlPlayerId && urlPseudo) {
@@ -53,11 +52,17 @@ function GamePlay({ lang }) {
     }
 
     // Set up event listeners
+    const handleRoomUpdate = ({ players, hostId }) => {
+      if (mounted) {
+        updateGameState({ players, hostId });
+      }
+    };
+
     const handleGameWord = ({ yourWord }) => {
       if (mounted) {
         updateGameState({ yourWord, status: 'playing' });
-        setIsRestarting(false); // Hide transition screen when new word arrives
-        setIsSpectating(false); // Exit spectator mode when getting a word
+        setIsRestarting(false);
+        setIsSpectating(false);
         setSpectateMessage('');
       }
     };
@@ -71,16 +76,16 @@ function GamePlay({ lang }) {
 
     const handleGameRestarted = ({ status }) => {
       if (mounted) {
-        updateGameState({ 
-          yourWord: null, 
-          chameleonId: null, 
-          mainWord: null, 
-          decoyWord: null, 
+        updateGameState({
+          yourWord: null,
+          chameleonId: null,
+          mainWord: null,
+          decoyWord: null,
           status: status || 'waiting'
         });
         setGameEnded(false);
         setLoading(false);
-        setIsRestarting(true); // Show transition screen
+        setIsRestarting(true);
       }
     };
 
@@ -119,6 +124,7 @@ function GamePlay({ lang }) {
       }
     };
 
+    socket.on('room:update', handleRoomUpdate);
     socket.on('game:word', handleGameWord);
     socket.on('game:ended', handleGameEnded);
     socket.on('game:restarted', handleGameRestarted);
@@ -128,27 +134,27 @@ function GamePlay({ lang }) {
     socket.on('player:left', handlePlayerLeft);
     socket.on('error', handleError);
 
-    // Only join once per socket connection
+    // Join/rejoin game on every (re)connection
     const currentPlayerId = gameState.playerId || urlPlayerId;
     const currentPseudo = gameState.pseudo || decodeURIComponent(urlPseudo || '');
 
-    if (currentPlayerId && currentPseudo && !hasJoined) {
-      hasJoined = true;
-      console.log(`Attempting to join game ${gameCode} as ${currentPlayerId} (${currentPseudo})`);
-      
+    if (currentPlayerId && currentPseudo) {
+      console.log(`Joining game ${gameCode} as ${currentPlayerId} (${currentPseudo})`);
+
       socket.emit('joinGame', {
         gameCode,
         playerId: currentPlayerId,
         pseudo: currentPseudo,
         password: gameState.password
       });
-    } else if (!currentPlayerId || !currentPseudo) {
+    } else {
       navigate('/');
       return;
     }
 
     return () => {
       mounted = false;
+      socket.off('room:update', handleRoomUpdate);
       socket.off('game:word', handleGameWord);
       socket.off('game:ended', handleGameEnded);
       socket.off('game:restarted', handleGameRestarted);
@@ -158,7 +164,7 @@ function GamePlay({ lang }) {
       socket.off('player:left', handlePlayerLeft);
       socket.off('error', handleError);
     };
-  }, [socket]);
+  }, [socket, connected]);
 
   const handleEndGame = async () => {
     if (!isHost) return;

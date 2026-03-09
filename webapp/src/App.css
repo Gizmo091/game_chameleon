@@ -181,3 +181,30 @@ button:disabled {
   flex-direction: column;
   align-items: center;
 }
+
+@media (prefers-color-scheme: dark) {
+  input {
+    background-color: #2a2a2e;
+    border-color: #444;
+    color: rgba(255, 255, 255, 0.87);
+  }
+
+  .language-selector select {
+    background-color: #2a2a2e;
+    border-color: #444;
+    color: rgba(255, 255, 255, 0.87);
+  }
+
+  .players-list li {
+    background-color: #2a2a2e;
+    color: rgba(255, 255, 255, 0.87);
+  }
+
+  .host-controls {
+    background-color: #2a2a2e;
+  }
+
+  .words-reveal {
+    background-color: #2a2a2e;
+  }
+}

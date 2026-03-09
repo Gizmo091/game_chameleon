@@ -9,7 +9,7 @@ import Toast from './Toast';
 function GameLobby({ lang }) {
   const { gameCode, playerId: urlPlayerId, pseudo: urlPseudo } = useParams();
   const navigate = useNavigate();
-  const { socket } = useSocket();
+  const { socket, connected } = useSocket();
   const { gameState, updateGameState, resetGame } = useGame();
   const [loading, setLoading] = useState(false);
   const [showModal, setShowModal] = useState(false);
@@ -44,10 +44,9 @@ function GameLobby({ lang }) {
   };
 
   useEffect(() => {
-    if (!socket) return;
+    if (!socket || !connected) return;
 
     let mounted = true;
-    let hasJoined = false;
 
     // First, handle player info restoration from URL
     if (urlPlayerId && urlPseudo) {
@@ -65,14 +64,14 @@ function GameLobby({ lang }) {
     // Set up event listeners
     const handleRoomUpdate = ({ players, hostId }) => {
       if (mounted) {
-        const prevCount = gameState.players.length;
         updateGameState({ players, hostId });
-        
-        // Auto-show modal for host when alone, ONLY if it's the initial state (coming from 0 players)
-        if (gameState.playerId === hostId && players.length === 1 && prevCount === 0) {
+
+        // Auto-show modal for host when alone
+        const currentId = gameState.playerId || urlPlayerId;
+        if (currentId === hostId && players.length === 1) {
           openShareModal();
         }
-        
+
         setPreviousPlayerCount(players.length);
       }
     };
@@ -95,8 +94,6 @@ function GameLobby({ lang }) {
 
     const handleError = ({ message }) => {
       console.error('Socket error:', message);
-      console.log('Current gameState:', gameState);
-      console.log('URL params:', { urlPlayerId, urlPseudo, gameCode });
       if (mounted && (message === 'Game not found' || message === 'Wrong password' || message === 'Game ended')) {
         resetGame();
         navigate('/');
@@ -125,15 +122,13 @@ function GameLobby({ lang }) {
     socket.on('player:left', handlePlayerLeft);
     socket.on('error', handleError);
 
-    // Only join once per socket connection
+    // Join/rejoin game on every (re)connection
     const currentPlayerId = gameState.playerId || urlPlayerId;
     const currentPseudo = gameState.pseudo || decodeURIComponent(urlPseudo || '');
 
-    if (currentPlayerId && currentPseudo && !hasJoined) {
-      hasJoined = true;
-      console.log(`Attempting to join game ${gameCode} as ${currentPlayerId} (${currentPseudo})`);
-      console.log('Current gameState before join:', gameState);
-      
+    if (currentPlayerId && currentPseudo) {
+      console.log(`Joining game ${gameCode} as ${currentPlayerId} (${currentPseudo})`);
+
       socket.emit('joinGame', {
         gameCode,
         playerId: currentPlayerId,
@@ -141,12 +136,8 @@ function GameLobby({ lang }) {
         password: gameState.password
       });
     } else if (!urlPlayerId || !urlPseudo) {
-      // Only navigate away if URL params are also missing (not just gameState)
-      console.log('Missing URL params, navigating home:', { urlPlayerId, urlPseudo });
       navigate('/');
       return;
-    } else {
-      console.log('Waiting for gameState or socket reconnection...');
     }
 
     return () => {
@@ -158,7 +149,7 @@ function GameLobby({ lang }) {
       socket.off('player:left', handlePlayerLeft);
       socket.off('error', handleError);
     };
-  }, [socket]);
+  }, [socket, connected]);
 
   const handleStartGame = async () => {
     if (!isHost || gameState.players.length < 3) return;

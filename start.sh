@@ -1,45 +1,40 @@
 #!/bin/bash
 
-echo "🎯 Démarrage du Jeu du Caméléon..."
+echo "Demarrage du Jeu du Cameleon..."
 echo "=================================="
 
-# Vérifier que Docker est installé
 if ! command -v docker &> /dev/null; then
-    echo "❌ Docker n'est pas installé"
+    echo "Docker n'est pas installe"
     exit 1
 fi
 
-if ! command -v docker-compose &> /dev/null; then
-    echo "❌ Docker Compose n'est pas installé"
+if ! command -v docker-compose &> /dev/null && ! docker compose version &> /dev/null; then
+    echo "Docker Compose n'est pas installe"
     exit 1
 fi
 
-echo "✅ Docker et Docker Compose détectés"
+echo "Docker et Docker Compose detectes"
 
-# Lancer les services
-echo "🚀 Lancement des services..."
-docker-compose up -d
+echo "Lancement des services..."
+docker compose up -d
 
-# Attendre que les services soient prêts
-echo "⏳ Attente du démarrage des services..."
-sleep 10
+echo "Attente du demarrage des services..."
+sleep 5
 
-# Vérifier le statut
-echo "📊 Statut des services :"
-docker-compose ps
+echo "Statut des services :"
+docker compose ps
+
+API_PORT=${API_PORT:-3000}
+WEBAPP_PORT=${WEBAPP_PORT:-80}
 
 echo ""
-echo "🎉 Services lancés avec succès !"
+echo "Services lances avec succes !"
 echo ""
-echo "📍 URLs d'accès :"
-echo "   API:    http://localhost:3000"
-echo "   WebApp: http://localhost:8080"
+echo "URLs d'acces :"
+echo "   API:    http://localhost:${API_PORT}"
+echo "   WebApp: http://localhost:${WEBAPP_PORT}"
 echo ""
-echo "🌐 URLs de production (avec reverse proxy) :"
-echo "   API:    http://api.cameleon.vedielaute.fr"
-echo "   WebApp: http://cameleon.vedielaute.fr"
-echo ""
-echo "📋 Commandes utiles :"
-echo "   Logs:     docker-compose logs -f"
-echo "   Arrêt:    docker-compose down"
-echo "   Restart:  docker-compose restart"
+echo "Commandes utiles :"
+echo "   Logs:     docker compose logs -f"
+echo "   Arret:    docker compose down"
+echo "   Restart:  docker compose restart"

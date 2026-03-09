@@ -9,68 +9,114 @@
 
 [!["Buy Me A Coffee"](https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png)](https://www.buymeacoffee.com/mathieuvedie)
 
-Un jeu multilingue inspiré du "Chameleon" où tous les joueurs reçoivent le même mot principal, sauf un seul — le Caméléon — qui reçoit un mot secondaire différent mais du même genre.
+Un jeu multilingue inspire du "Chameleon" ou tous les joueurs recoivent le meme mot principal, sauf un seul -- le Cameleon -- qui recoit un mot secondaire different mais du meme genre.
 
 ## Proposition
 
-- Ne pas hesiter à proposer vos couples de mots (ouvrez une ISSUE ou faite une pull request)
+- Ne pas hesiter a proposer vos couples de mots (ouvrez une ISSUE ou faite une pull request)
 
-## Règles du jeu
+## Regles du jeu
 
 - 3 joueurs minimum requis
-- Tous les joueurs reçoivent le même mot (ex: "Noël")
-- Un joueur aléatoire (le Caméléon) reçoit un mot différent mais similaire (ex: "Pâques")
-- Les joueurs doivent deviner qui est le Caméléon lors des discussions
+- Tous les joueurs recoivent le meme mot (ex: "Noel")
+- Un joueur aleatoire (le Cameleon) recoit un mot different mais similaire (ex: "Paques")
+- Les joueurs doivent deviner qui est le Cameleon lors des discussions
 
 ## Architecture
 
-- **Backend API** : Node.js/Express avec Socket.IO pour le temps réel
+- **Backend API** : Node.js/Express avec Socket.IO pour le temps reel
 - **Frontend WebApp** : React avec Vite
-- **Containerisation** : Docker avec images officielles
+- **Containerisation** : Docker avec images pre-construites via GitHub Container Registry
 
 ## Installation et lancement
 
-### Prérequis
+### Option 1 : Docker (recommande)
 
-- Docker et Docker Compose installés
-- Ports 3000 et 8080 disponibles
+#### Prerequis
 
-### Démarrage
+- Docker et Docker Compose installes
 
-1. Cloner le repository :
+#### Demarrage rapide
+
 ```bash
 git clone https://github.com/Gizmo091/game_chameleon
 cd game_chameleon
+./start.sh
 ```
 
-2. Démarrer l'API :
+Les images Docker pre-construites sont telechargees automatiquement depuis GHCR.
+
+#### Configuration
+
+Copiez `.env.example` et configurez votre environnement :
+
 ```bash
-docker-compose -f docker-compose.api.yaml up --build
+cp .env.example .env
+# Editez .env avec votre URL d'API
 ```
 
-3. Dans un nouveau terminal, démarrer la WebApp :
+Variables disponibles :
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `VITE_API_URL` | *(requis)* | URL de votre API (ex: `https://api.mon-domaine.fr`) |
+| `API_PORT` | `3000` | Port de l'API |
+| `WEBAPP_PORT` | `80` | Port de la webapp |
+
+L'URL de l'API est injectee au demarrage du conteneur webapp, donc chaque utilisateur peut deployer avec sa propre URL sans reconstruire l'image.
+
+#### Commandes utiles
+
 ```bash
-docker-compose -f docker-compose.webapp.yaml up --build
+docker compose up -d       # Demarrer
+docker compose down        # Arreter
+docker compose logs -f     # Voir les logs
+docker compose restart     # Redemarrer
 ```
 
-4. Accéder à l'application :
-- **API** : http://localhost:3000
-- **WebApp** : http://localhost:8080
+### Option 2 : Developpement local
+
+```bash
+# API
+cd api && npm install && npm run dev
+
+# WebApp (dans un autre terminal)
+cd webapp && npm install && npm run dev
+```
+
+Configurez `webapp/.env` :
+```
+VITE_API_URL=http://localhost:3000
+```
+
+### Option 3 : Docker dev (build local)
+
+```bash
+docker compose -f docker-compose.dev.yml up --build
+```
+
+## CI/CD
+
+A chaque push sur `main`, GitHub Actions build et publie automatiquement les images Docker sur GHCR :
+- `ghcr.io/gizmo091/game_chameleon/api:latest`
+- `ghcr.io/gizmo091/game_chameleon/webapp:latest`
+
+L'image webapp est construite avec un placeholder pour l'URL de l'API. Chaque utilisateur configure `VITE_API_URL` dans son `.env` au deploiement, pas besoin de reconstruire.
 
 ## Variables d'environnement
 
 ### API
-- `PORT` : Port du serveur (défaut: 3000)
+- `PORT` : Port du serveur (defaut: 3000)
 
 ### WebApp
-- `VITE_API_URL` : URL de l'API (défaut: http://localhost:3000)
+- `VITE_API_URL` : URL de l'API (defaut: http://localhost:3000)
 
 ## API Endpoints
 
 ### REST
 
 #### POST `/parties`
-Crée une nouvelle partie.
+Cree une nouvelle partie.
 
 **Query params** :
 - `lang` : Langue (en, fr) - optionnel
@@ -84,7 +130,7 @@ Crée une nouvelle partie.
 ```
 
 #### GET `/parties/{gameCode}`
-Récupère l'état d'une partie.
+Recupere l'etat d'une partie.
 
 **Response** :
 ```json
@@ -100,28 +146,17 @@ Récupère l'état d'une partie.
 ```
 
 #### POST `/parties/{gameCode}/start`
-Démarre la partie (réservé à l'hôte).
-
-**Response** :
-```json
-{
-  "success": true
-}
-```
+Demarre la partie (reserve a l'hote).
 
 #### POST `/parties/{gameCode}/end`
-Termine la partie et révèle le Caméléon (réservé à l'hôte).
+Termine la partie et revele le Cameleon (reserve a l'hote).
 
-**Response** :
-```json
-{
-  "chameleonId": "player_456"
-}
-```
+#### POST `/parties/{gameCode}/restart`
+Relance une nouvelle manche.
 
 ### WebSocket Events
 
-#### Client → Server
+#### Client > Server
 
 ##### `joinGame`
 Rejoint une partie.
@@ -129,7 +164,8 @@ Rejoint une partie.
 socket.emit('joinGame', {
   gameCode: "1234",
   playerId: "player_123",
-  pseudo: "Alice"
+  pseudo: "Alice",
+  password: "optional"
 });
 ```
 
@@ -139,101 +175,85 @@ Quitte la partie.
 socket.emit('leaveGame');
 ```
 
-#### Server → Client
+#### Server > Client
 
 ##### `room:update`
-Mise à jour de la liste des joueurs.
+Mise a jour de la liste des joueurs.
 ```javascript
 socket.on('room:update', ({ players, hostId }) => {
   // players: [{ id, pseudo }]
-  // hostId: "player_123"
 });
 ```
 
 ##### `game:word`
-Réception du mot assigné.
+Reception du mot assigne.
 ```javascript
-socket.on('game:word', ({ yourWord }) => {
-  // yourWord: "Christmas" ou "Easter"
-});
+socket.on('game:word', ({ yourWord }) => {});
 ```
 
 ##### `game:started`
-La partie a démarré.
-```javascript
-socket.on('game:started', ({ status }) => {
-  // status: "playing"
-});
-```
+La partie a demarre.
 
 ##### `game:ended`
-La partie est terminée.
+La partie est terminee, revele le cameleon et les mots.
 ```javascript
-socket.on('game:ended', ({ chameleonId, mainWord, decoyWord }) => {
-  // chameleonId: "player_456"
-  // mainWord: "Christmas"
-  // decoyWord: "Easter"
-});
+socket.on('game:ended', ({ chameleonId, mainWord, decoyWord }) => {});
 ```
 
+##### `game:restarted`
+Nouvelle manche lancee.
+
+##### `host:left` / `player:left`
+Un joueur ou l'hote a quitte la partie.
+
 ##### `error`
-Erreur.
-```javascript
-socket.on('error', ({ message }) => {
-  // message: "Game not found"
-});
-```
+Erreur (Game not found, Wrong password, Game ended).
 
 ## Internationalisation (i18n)
 
 L'application supporte plusieurs langues :
 - Anglais (en)
-- Français (fr)
+- Francais (fr)
 
-La langue peut être sélectionnée :
-- Via l'interface utilisateur
-- Via le paramètre `?lang=` dans l'URL de l'API
-- Via le header `Accept-Language`
+La langue peut etre selectionnee via l'interface, le parametre `?lang=` ou le header `Accept-Language`.
 
-## Base de données des mots
+## Base de donnees des mots
 
-Les mots sont organisés par catégories et langues :
-
-- **Animaux** : chat/chien, éléphant/girafe, requin/dauphin
-- **Vacances** : Noël/Pâques, Halloween/Thanksgiving
+Les mots sont organises par categories et langues :
+- **Animaux** : chat/chien, elephant/girafe, requin/dauphin
+- **Vacances** : Noel/Paques, Halloween/Thanksgiving
 - **Voitures** : Ferrari/Lamborghini, BMW/Mercedes
+- Et bien d'autres categories...
 
-## Sécurité
-
-- CORS configuré pour accepter toutes les origines (à restreindre en production)
-- Validation des codes de partie
-- Nettoyage automatique des parties après 1 heure d'inactivité
-- Limitation aux actions de l'hôte (démarrer/terminer la partie)
-
-## Développement
-
-### Structure du projet
+## Structure du projet
 
 ```
 game_chameleon/
 ├── api/
+│   ├── Dockerfile
 │   ├── package.json
-│   └── server.js
+│   ├── server.js
+│   └── words-database.js
 ├── webapp/
+│   ├── Dockerfile
+│   ├── nginx.conf
 │   ├── src/
 │   │   ├── components/
 │   │   ├── contexts/
 │   │   ├── utils/
 │   │   └── App.jsx
 │   └── package.json
-├── docker-compose.api.yaml
-├── docker-compose.webapp.yaml
+├── .github/workflows/
+│   └── docker-publish.yml
+├── docker-compose.yml
+├── docker-compose.dev.yml
+├── .env.example
 └── README.md
 ```
 
-### Technologies utilisées
+## Technologies utilisees
 
 - **Backend** : Node.js, Express, Socket.IO
-- **Frontend** : React, Vite, React Router, Socket.IO Client
-- **UI** : CSS personnalisé
-- **QR Code** : qrcode library
+- **Frontend** : React 19, Vite, React Router, Socket.IO Client
+- **QR Code** : qrcode + @zxing/browser
+- **Production** : Docker, nginx, GitHub Actions, GHCR

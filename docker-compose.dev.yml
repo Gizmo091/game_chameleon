@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+  api:
+    build: ./api
+    container_name: chameleon-api
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=development
+      - PORT=3000
+    volumes:
+      - ./api:/app
+      - /app/node_modules
+    command: npm run dev
+    restart: unless-stopped
+
+  webapp:
+    build:
+      context: ./webapp
+      args:
+        VITE_API_URL: ${VITE_API_URL:-http://localhost:3000}
+    container_name: chameleon-webapp
+    ports:
+      - "8080:80"
+    restart: unless-stopped
+    depends_on:
+      - api
